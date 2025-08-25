@@ -160,5 +160,35 @@
         "Name": "Glow AI",
         "Description": "Practice interviews with an AI that asks relevant questions and provides instant, detailed feedback on your answers, vocal delivery, and overall performance.",
         "tags": "interview prep,career,video analysis,assistant"
-    }
+    },
+	{
+    "link": "https://www.make.com/",
+    "Name": "Make",
+    "Description": "A powerful no-code automation platform that allows you to connect applications and automate complex workflows with a visual builder.",
+    "tags": "automation,workflow,integration,no-code"
+  },
+  {
+    "link": "https://zapier.com/",
+    "Name": "Zapier",
+    "Description": "Connects over 5,000 apps to automate repetitive tasks and create seamless workflows between different services.",
+    "tags": "automation,workflow,integration"
+  },
+  {
+    "link": "https://axiom.ai/",
+    "Name": "Axiom.ai",
+    "Description": "Automate any browser or desktop task without code. Build bots to scrape data, fill forms, and automate repetitive online actions.",
+    "tags": "automation,data scraping,web automation,bots"
+  },
+  {
+    "link": "https://www.browse.ai/",
+    "Name": "Browse AI",
+    "Description": "A no-code tool for monitoring websites and extracting data. It can automatically scrape data and send it to other services.",
+    "tags": "automation,data scraping,web automation"
+  },
+  {
+    "link": "https://www.bardeen.ai/",
+    "Name": "Bardeen",
+    "Description": "A browser-based automation tool that allows you to create workflows and automate tasks using a simple, browser-based interface.",
+    "tags": "automation,workflow,browser"
+  },
 ]
