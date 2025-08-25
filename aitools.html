@@ -339,62 +339,170 @@
             // =========================================
             // In a real application, this might come from an API.
             // For this self-contained example, it's defined here.
-            const toolsJSON = [
-                {
-                    link: "#",
-                    Name: "PixelPerfect AI",
-                    Description: "An advanced AI-powered image generator that creates stunning visuals from text prompts. Perfect for artists and designers.",
-                    tags: "image generation,art,design,creativity"
-                },
-                {
-                    link: "#",
-                    Name: "CodeGenius",
-                    Description: "Your personal AI coding assistant. Helps write, debug, and optimize code in over 20 programming languages.",
-                    tags: "code,development,productivity,assistant"
-                },
-                {
-                    link: "#",
-                    Name: "EchoWrite",
-                    Description: "AI-driven content creation tool that generates blog posts, marketing copy, and social media updates in seconds.",
-                    tags: "writing,content creation,marketing"
-                },
-                {
-                    link: "#",
-                    Name: "Synthony",
-                    Description: "Compose unique, royalty-free music tracks with AI. Specify genre, mood, and instruments to create your perfect sound.",
-                    tags: "music,audio,creativity"
-                },
-                {
-                    link: "#",
-                    Name: "DataSift Pro",
-                    Description: "Analyze complex datasets, identify trends, and generate insightful reports automatically with this powerful AI tool.",
-                    tags: "data analysis,productivity,business"
-                },
-                {
-                    link: "#",
-                    Name: "TranslateSphere",
-                    Description: "Break language barriers with real-time translation for text and speech, supporting over 100 languages with high accuracy.",
-                    tags: "translation,language,productivity"
-                },
-                {
-                    link: "#",
-                    Name: "VideoVerse",
-                    Description: "Generate professional-quality videos from text scripts, including voiceovers and stock footage selection.",
-                    tags: "video,content creation,marketing"
-                },
-                {
-                    link: "#",
-                    Name: "BrandBeacon",
-                    Description: "AI tool for monitoring brand mentions and sentiment across social media and the web, providing actionable insights.",
-                    tags: "marketing,business,data analysis"
-                },
-                {
-                    link: "#",
-                    Name: "CodeScribe",
-                    Description: "Automatically generate documentation for your codebases, making projects easier to understand and maintain.",
-                    tags: "code,development,documentation"
-                }
-            ];
+            const toolsJSON =				[
+    {
+        "link": "https://chat.openai.com/",
+        "Name": "ChatGPT",
+        "Description": "A state-of-the-art conversational AI by OpenAI that can generate human-like text, answer questions, write code, and assist with a wide range of creative and analytical tasks.",
+        "tags": "chatbot,writing,code,assistant,productivity"
+    },
+    {
+        "link": "https://gemini.google.com/",
+        "Name": "Google Gemini",
+        "Description": "Google's powerful multimodal AI model, capable of understanding and reasoning across text, images, code, and video. Integrated into various Google products.",
+        "tags": "chatbot,multimodal,assistant,research,google"
+    },
+    {
+        "link": "https://claude.ai/",
+        "Name": "Claude 3",
+        "Description": "A family of large language models from Anthropic known for its strong performance in complex reasoning, thoughtful dialogue, and a focus on AI safety.",
+        "tags": "chatbot,writing,assistant,business,research"
+    },
+    {
+        "link": "https://www.midjourney.com/",
+        "Name": "Midjourney",
+        "Description": "A premier AI image generator that creates highly detailed and artistic images from natural language prompts, accessed primarily through Discord.",
+        "tags": "image generation,art,design,creativity"
+    },
+    {
+        "link": "https://openai.com/dall-e-3",
+        "Name": "DALL-E 3",
+        "Description": "OpenAI's advanced text-to-image model that generates high-quality, nuanced images with a deep understanding of prompts. Integrated into ChatGPT Plus.",
+        "tags": "image generation,art,design,openai"
+    },
+    {
+        "link": "https://stability.ai/",
+        "Name": "Stable Diffusion",
+        "Description": "A powerful, open-source text-to-image model by Stability AI, popular for its flexibility, customizability, and vibrant community of developers.",
+        "tags": "image generation,open source,art,development"
+    },
+    {
+        "link": "https://openai.com/sora",
+        "Name": "Sora",
+        "Description": "An AI model from OpenAI that can create realistic and imaginative video scenes from text instructions, simulating the physical world in motion.",
+        "tags": "video,content creation,animation,openai"
+    },
+    {
+        "link": "https://runwayml.com/",
+        "Name": "Runway",
+        "Description": "An all-in-one content creation suite with powerful AI magic tools for video editing, image generation, and other creative tasks.",
+        "tags": "video,editing,content creation,design"
+    },
+    {
+        "link": "https://pika.art/",
+        "Name": "Pika",
+        "Description": "A popular text-to-video and image-to-video platform that makes it easy to create expressive and high-quality short videos with AI.",
+        "tags": "video,content creation,animation,creativity"
+    },
+    {
+        "link": "https://elevenlabs.io/",
+        "Name": "ElevenLabs",
+        "Description": "A leading AI voice generation and text-to-speech platform that creates natural-sounding, human-like audio and allows for voice cloning.",
+        "tags": "audio,voice,text-to-speech,content creation"
+    },
+    {
+        "link": "https://suno.com/",
+        "Name": "Suno",
+        "Description": "An AI music generation tool that creates original songs, complete with lyrics, vocals, and instrumentation, from simple text prompts.",
+        "tags": "music,audio,creativity,song generation"
+    },
+    {
+        "link": "https://github.com/features/copilot",
+        "Name": "GitHub Copilot",
+        "Description": "An AI pair programmer that provides autocompletions, suggests entire functions, and helps you write code faster directly within your editor.",
+        "tags": "code,development,productivity,assistant,github"
+    },
+    {
+        "link": "https://www.perplexity.ai/",
+        "Name": "Perplexity AI",
+        "Description": "An AI-powered conversational search engine that provides direct, cited answers to questions by synthesizing information from multiple web sources.",
+        "tags": "research,search engine,productivity,assistant"
+    },
+    {
+        "link": "https://www.notion.so/product/ai",
+        "Name": "Notion AI",
+        "Description": "An AI assistant integrated into the Notion workspace that helps you write, brainstorm, summarize notes, and organize your thoughts more efficiently.",
+        "tags": "productivity,writing,assistant,organization"
+    },
+    {
+        "link": "https://www.canva.com/magic-studio/",
+        "Name": "Canva Magic Studio",
+        "Description": "A suite of AI-powered design tools within Canva that can generate images, write copy, create presentations, and automate design tasks.",
+        "tags": "design,marketing,image generation,content creation"
+    },
+    {
+        "link": "https://gamma.app/",
+        "Name": "Gamma",
+        "Description": "An AI-powered alternative to traditional slide decks. Generate beautiful and engaging presentations, documents, or webpages from a simple prompt.",
+        "tags": "presentation,design,productivity,business"
+    },
+    {
+        "link": "https://copilot.microsoft.com/",
+        "Name": "Microsoft Copilot",
+        "Description": "Microsoft's AI companion integrated across Windows, Bing, and Microsoft 365, designed to enhance productivity and information access.",
+        "tags": "assistant,productivity,chatbot,business,microsoft"
+    },
+    {
+        "link": "https://tome.app/",
+        "Name": "Tome",
+        "Description": "A modern AI-powered storytelling and presentation tool that helps you create compelling narratives with interactive, mobile-responsive layouts.",
+        "tags": "presentation,storytelling,design,business"
+    },
+	    {
+        "link": "https://ideamap.ai/",
+        "Name": "Ideamap AI",
+        "Description": "An AI-powered brainstorming and mind-mapping tool that helps you visualize, structure, and expand on your ideas collaboratively in real-time.",
+        "tags": "brainstorming,mind mapping,ideation,productivity"
+    },
+    {
+        "link": "https://miro.com/ai/",
+        "Name": "Miro AI",
+        "Description": "An AI assistant within the Miro collaborative whiteboard that can generate ideas, summarize sticky notes, create diagrams, and accelerate team brainstorming sessions.",
+        "tags": "brainstorming,collaboration,diagramming,productivity"
+    },
+    {
+        "link": "https://whimsical.com/ai",
+        "Name": "Whimsical AI",
+        "Description": "Generate mind maps, flowcharts, and other visual diagrams instantly from text prompts. A great tool for quick ideation and project planning within a collaborative space.",
+        "tags": "mind mapping,diagramming,ideation,project planning"
+    },
+    {
+        "link": "https://v0.dev/",
+        "Name": "v0.dev by Vercel",
+        "Description": "An AI-powered UI generation tool that creates React components and user interfaces from text prompts, using Shadcn UI and Tailwind CSS for modern designs.",
+        "tags": "app development,ui,frontend,code,vercel"
+    },
+    {
+        "link": "https://www.builder.io/",
+        "Name": "Builder.io Visual Copilot",
+        "Description": "A visual development platform with AI capabilities that can turn Figma designs into clean, high-quality code for various web frameworks, speeding up development.",
+        "tags": "app development,ui,frontend,low-code"
+    },
+    {
+        "link": "https://replit.com/ai",
+        "Name": "Replit AI",
+        "Description": "A comprehensive AI coding assistant within the Replit online IDE that helps write, debug, and explain code, supporting the entire development lifecycle.",
+        "tags": "app development,code,ide,assistant,fullstack"
+    },
+    {
+        "link": "https://app.yoodli.ai/",
+        "Name": "Yoodli",
+        "Description": "An AI speech coach that provides real-time, private feedback on your presentation and communication skills by analyzing filler words, pacing, and body language.",
+        "tags": "interview prep,communication,public speaking,video analysis"
+    },
+    {
+        "link": "https://www.poised.com/",
+        "Name": "Poised",
+        "Description": "An AI communication coach that works with virtual meeting platforms like Zoom and Google Meet to give real-time feedback on your confidence, clarity, and tone.",
+        "tags": "interview prep,communication,public speaking,assistant"
+    },
+    {
+        "link": "https://www.glowpe.com/",
+        "Name": "Glow AI",
+        "Description": "Practice interviews with an AI that asks relevant questions and provides instant, detailed feedback on your answers, vocal delivery, and overall performance.",
+        "tags": "interview prep,career,video analysis,assistant"
+    }
+];
 
             // =========================================
             //  DOM Element References
