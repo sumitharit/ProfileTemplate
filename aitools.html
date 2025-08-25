@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Dashboard</title>
+
+    <style>
+        /* * =========================================
+         * Google Fonts & CSS Variables
+         * =========================================
+         */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        /* CSS variables for a consistent dark theme and easy customization */
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --primary-color: #03dac6;
+            --primary-variant-color: #3700b3;
+            --secondary-color: #bb86fc;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border-color: #2c2c2c;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+
+            --border-radius: 12px;
+            --transition-speed: 0.3s;
+        }
+
+        /* * =========================================
+         * General Body & Layout Styling
+         * =========================================
+         */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* * =========================================
+         * Header and Filters Section
+         * =========================================
+         */
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .dashboard-header h1 span {
+            color: var(--primary-color);
+        }
+
+        .dashboard-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .filters-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            padding: 1rem;
+            background-color: var(--surface-color);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .search-wrapper {
+            flex-grow: 1; /* Allows search bar to take up available space */
+            min-width: 250px; /* Ensures it doesn't get too small */
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all var(--transition-speed) ease;
+        }
+
+        #search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(3, 218, 198, 0.3);
+        }
+
+        .tag-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .tag-filter {
+            padding: 0.5rem 1rem;
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .tag-filter:hover {
+            background-color: var(--primary-color);
+            color: var(--bg-color);
+            border-color: var(--primary-color);
+        }
+
+        .tag-filter.active {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+            border-color: var(--secondary-color);
+            font-weight: 600;
+        }
+
+        /* * =========================================
+         * AI Tools Grid & Card Styling
+         * =========================================
+         */
+        #tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tool-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            opacity: 0; /* Start hidden for animation */
+            transform: translateY(20px);
+            transition: transform var(--transition-speed) ease, 
+                        box-shadow var(--transition-speed) ease,
+                        opacity var(--transition-speed) ease;
+        }
+        
+        /* Animation class added by JS */
+        .tool-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tool-card.hidden {
+            opacity: 0;
+            transform: scale(0.95);
+            /* This ensures hidden cards don't take up space in the grid */
+            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease, height 0s .3s, padding 0s .3s, margin 0s .3s;
+            height: 0;
+            padding: 0;
+            margin: 0;
+            border: none;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow-color);
+            border-color: var(--primary-color);
+        }
+
+        .tool-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            flex-grow: 1; /* Makes description take available space */
+            font-size: 0.95rem;
+        }
+
+        .card-footer {
+            margin-top: auto; /* Pushes footer to the bottom */
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-tags span {
+            background-color: var(--bg-color);
+            color: var(--secondary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+        }
+
+        .tool-link {
+            display: inline-block;
+            text-decoration: none;
+            background-color: var(--primary-variant-color);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            transition: background-color var(--transition-speed) ease;
+        }
+
+        .tool-link:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* * =========================================
+         * Footer
+         * =========================================
+         */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        /* * =========================================
+         * Animations
+         * =========================================
+         */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* * =========================================
+         * Responsive Design
+         * =========================================
+         */
+        @media (max-width: 768px) {
+            .dashboard-header h1 {
+                font-size: 2rem;
+            }
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            #tools-grid {
+                grid-template-columns: 1fr; /* Single column on mobile */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="dashboard-header">
+            <h1>AI Tools <span>Dashboard</span></h1>
+            <p>Discover, filter, and explore the best AI tools for your needs.</p>
+        </header>
+
+        <section class="filters-container">
+            <div class="search-wrapper">
+                <input type="search" id="search-input" placeholder="Search by name or description...">
+            </div>
+            <div class="tag-filters" id="tag-filters-container">
+                </div>
+        </section>
+
+        <main>
+            <div id="tools-grid">
+                </div>
+        </main>
+
+    </div>
+    
+    <footer class="footer">
+        <p>&copy; 2025 AI Tools Dashboard. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // =========================================
+            //  DATA: The JSON for AI Tools
+            // =========================================
+            // In a real application, this might come from an API.
+            // For this self-contained example, it's defined here.
+            const toolsJSON = [
+                {
+                    link: "#",
+                    Name: "PixelPerfect AI",
+                    Description: "An advanced AI-powered image generator that creates stunning visuals from text prompts. Perfect for artists and designers.",
+                    tags: "image generation,art,design,creativity"
+                },
+                {
+                    link: "#",
+                    Name: "CodeGenius",
+                    Description: "Your personal AI coding assistant. Helps write, debug, and optimize code in over 20 programming languages.",
+                    tags: "code,development,productivity,assistant"
+                },
+                {
+                    link: "#",
+                    Name: "EchoWrite",
+                    Description: "AI-driven content creation tool that generates blog posts, marketing copy, and social media updates in seconds.",
+                    tags: "writing,content creation,marketing"
+                },
+                {
+                    link: "#",
+                    Name: "Synthony",
+                    Description: "Compose unique, royalty-free music tracks with AI. Specify genre, mood, and instruments to create your perfect sound.",
+                    tags: "music,audio,creativity"
+                },
+                {
+                    link: "#",
+                    Name: "DataSift Pro",
+                    Description: "Analyze complex datasets, identify trends, and generate insightful reports automatically with this powerful AI tool.",
+                    tags: "data analysis,productivity,business"
+                },
+                {
+                    link: "#",
+                    Name: "TranslateSphere",
+                    Description: "Break language barriers with real-time translation for text and speech, supporting over 100 languages with high accuracy.",
+                    tags: "translation,language,productivity"
+                },
+                {
+                    link: "#",
+                    Name: "VideoVerse",
+                    Description: "Generate professional-quality videos from text scripts, including voiceovers and stock footage selection.",
+                    tags: "video,content creation,marketing"
+                },
+                {
+                    link: "#",
+                    Name: "BrandBeacon",
+                    Description: "AI tool for monitoring brand mentions and sentiment across social media and the web, providing actionable insights.",
+                    tags: "marketing,business,data analysis"
+                },
+                {
+                    link: "#",
+                    Name: "CodeScribe",
+                    Description: "Automatically generate documentation for your codebases, making projects easier to understand and maintain.",
+                    tags: "code,development,documentation"
+                }
+            ];
+
+            // =========================================
+            //  DOM Element References
+            // =========================================
+            const grid = document.getElementById('tools-grid');
+            const searchInput = document.getElementById('search-input');
+            const tagsContainer = document.getElementById('tag-filters-container');
+
+            let activeTag = 'all'; // Keep track of the currently selected tag filter
+
+            // =========================================
+            //  Core Functions
+            // =========================================
+
+            /**
+             * Renders the tool cards onto the page based on a provided array of tools.
+             * @param {Array} tools - The array of tool objects to display.
+             */
+            function renderTools(tools) {
+                grid.innerHTML = ''; // Clear the grid first
+                if (tools.length === 0) {
+                    grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1 / -1; text-align: center;">No tools found matching your criteria.</p>`;
+                    return;
+                }
+                
+                tools.forEach((tool, index) => {
+                    // Convert tags string to an array for easier processing
+                    const tagsArray = tool.tags.split(',').map(tag => tag.trim());
+                    
+                    // Create the HTML for the tags
+                    const tagsHTML = tagsArray.map(tag => `<span class="tag">${tag}</span>`).join('');
+
+                    // Create the card element
+                    const card = document.createElement('div');
+                    card.className = 'tool-card';
+                    card.innerHTML = `
+                        <h3>${tool.Name}</h3>
+                        <p>${tool.Description}</p>
+                        <div class="card-footer">
+                            <div class="card-tags">${tagsHTML}</div>
+                            <a href="${tool.link}" class="tool-link" target="_blank" rel="noopener noreferrer">Visit Tool</a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+
+                    // Add a staggered animation effect for visible cards
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, index * 100);
+                });
+            }
+
+
+            /**
+             * Extracts all unique tags from the tools data and creates filter buttons.
+             */
+            function generateFilterTags() {
+                // Use a Set to automatically handle uniqueness
+                const allTags = new Set();
+                toolsJSON.forEach(tool => {
+                    tool.tags.split(',').forEach(tag => allTags.add(tag.trim()));
+                });
+
+                // Create 'All' button
+                tagsContainer.innerHTML = `<button class="tag-filter active" data-tag="all">All</button>`;
+                
+                // Create buttons for each unique tag
+                allTags.forEach(tag => {
+                    const button = document.createElement('button');
+                    button.className = 'tag-filter';
+                    button.textContent = tag;
+                    button.dataset.tag = tag; // Use data attribute for easy selection
+                    tagsContainer.appendChild(button);
+                });
+            }
+
+
+            /**
+             * Filters the tools based on the current search term and active tag.
+             * This function is the heart of the dashboard's interactivity.
+             */
+            function filterAndRender() {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                const filteredTools = toolsJSON.filter(tool => {
+                    // Check if search term matches name or description
+                    const matchesSearch = tool.Name.toLowerCase().includes(searchTerm) ||
+                                          tool.Description.toLowerCase().includes(searchTerm);
+
+                    // Check if tags match the active filter
+                    const matchesTag = activeTag === 'all' || tool.tags.split(',').map(t => t.trim()).includes(activeTag);
+
+                    return matchesSearch && matchesTag;
+                });
+                
+                renderTools(filteredTools);
+            }
+
+            // =========================================
+            //  Event Listeners
+            // =========================================
+
+            // Listen for input in the search bar
+            searchInput.addEventListener('input', filterAndRender);
+
+            // Listen for clicks on the tag filter buttons (using event delegation)
+            tagsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('tag-filter')) {
+                    // Remove 'active' class from previously active button
+                    tagsContainer.querySelector('.active').classList.remove('active');
+                    // Add 'active' class to the clicked button
+                    e.target.classList.add('active');
+                    
+                    // Update the active tag state
+                    activeTag = e.target.dataset.tag;
+                    
+                    // Re-run the filter and render process
+                    filterAndRender();
+                }
+            });
+
+            // =========================================
+            //  Initialisation
+            // =========================================
+            
+            // Generate the filter buttons and render all tools on initial page load
+            generateFilterTags();
+            renderTools(toolsJSON);
+
+        });
+    </script>
+</body>
+</html>
