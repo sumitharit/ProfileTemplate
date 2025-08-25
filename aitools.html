@@ -12,7 +12,6 @@
          */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-        /* CSS variables for a consistent dark theme and easy customization */
         :root {
             --bg-color: #121212;
             --surface-color: #1e1e1e;
@@ -23,7 +22,6 @@
             --text-secondary: #b3b3b3;
             --border-color: #2c2c2c;
             --shadow-color: rgba(0, 0, 0, 0.5);
-
             --border-radius: 12px;
             --transition-speed: 0.3s;
         }
@@ -47,22 +45,31 @@
             background-color: var(--bg-color);
             color: var(--text-primary);
             line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 100%; /* Use full width */
             margin: 0 auto;
-            padding: 2rem 1rem;
+            padding: 2rem;
+        }
+        
+        /* New layout using Flexbox for main content and sidebar */
+        .dashboard-layout {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+        
+        .main-content {
+            flex-grow: 1; /* Main content takes up remaining space */
+            min-width: 0; /* Prevents flex items from overflowing */
         }
 
         /* * =========================================
-         * Header and Filters Section
+         * Header and Search Section
          * =========================================
          */
         .dashboard-header {
-            text-align: center;
             margin-bottom: 2rem;
             animation: fadeInDown 0.8s ease-out;
         }
@@ -70,45 +77,22 @@
         .dashboard-header h1 {
             font-size: 2.5rem;
             font-weight: 700;
-            color: var(--text-primary);
         }
         
         .dashboard-header h1 span {
             color: var(--primary-color);
         }
 
-        .dashboard-header p {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            margin-top: 0.5rem;
-        }
-
-        .filters-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
-            padding: 1rem;
-            background-color: var(--surface-color);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--border-color);
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .search-wrapper {
-            flex-grow: 1; /* Allows search bar to take up available space */
-            min-width: 250px; /* Ensures it doesn't get too small */
-        }
-
         #search-input {
             width: 100%;
             padding: 0.75rem 1rem;
-            background-color: var(--bg-color);
+            background-color: var(--surface-color);
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
             color: var(--text-primary);
             font-size: 1rem;
             transition: all var(--transition-speed) ease;
+            margin-bottom: 2rem;
         }
 
         #search-input:focus {
@@ -117,19 +101,44 @@
             box-shadow: 0 0 10px rgba(3, 218, 198, 0.3);
         }
 
+        /* * =========================================
+         * Sidebar for Tags
+         * =========================================
+         */
+        .sidebar {
+            flex-basis: 260px; /* Fixed width for the sidebar */
+            flex-shrink: 0;
+            position: sticky; /* Makes the sidebar stick on scroll */
+            top: 2rem;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            animation: fadeInRight 0.8s ease-out;
+        }
+        
+        .sidebar h2 {
+            margin-bottom: 1.5rem;
+            color: var(--secondary-color);
+            font-size: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
         .tag-filters {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column; /* Stack tags vertically */
+            align-items: stretch; /* Make buttons full width of container */
             gap: 0.75rem;
-            align-items: center;
         }
 
         .tag-filter {
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1rem;
+            text-align: left;
             background-color: transparent;
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            border-radius: 20px;
+            border-radius: 8px; /* Slightly less rounded for a list look */
             cursor: pointer;
             font-weight: 500;
             transition: all var(--transition-speed) ease;
@@ -139,6 +148,7 @@
             background-color: var(--primary-color);
             color: var(--bg-color);
             border-color: var(--primary-color);
+            transform: translateX(5px);
         }
 
         .tag-filter.active {
@@ -154,7 +164,7 @@
          */
         #tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1.5rem;
         }
 
@@ -166,29 +176,14 @@
             display: flex;
             flex-direction: column;
             box-shadow: 0 4px 15px var(--shadow-color);
-            opacity: 0; /* Start hidden for animation */
+            opacity: 0;
             transform: translateY(20px);
-            transition: transform var(--transition-speed) ease, 
-                        box-shadow var(--transition-speed) ease,
-                        opacity var(--transition-speed) ease;
+            transition: all var(--transition-speed) ease;
         }
         
-        /* Animation class added by JS */
         .tool-card.visible {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        .tool-card.hidden {
-            opacity: 0;
-            transform: scale(0.95);
-            /* This ensures hidden cards don't take up space in the grid */
-            transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease, height 0s .3s, padding 0s .3s, margin 0s .3s;
-            height: 0;
-            padding: 0;
-            margin: 0;
-            border: none;
-            overflow: hidden;
         }
 
         .tool-card:hover {
@@ -199,7 +194,6 @@
 
         .tool-card h3 {
             font-size: 1.3rem;
-            font-weight: 600;
             color: var(--primary-color);
             margin-bottom: 0.5rem;
         }
@@ -207,12 +201,12 @@
         .tool-card p {
             color: var(--text-secondary);
             margin-bottom: 1rem;
-            flex-grow: 1; /* Makes description take available space */
+            flex-grow: 1;
             font-size: 0.95rem;
         }
 
         .card-footer {
-            margin-top: auto; /* Pushes footer to the bottom */
+            margin-top: auto;
         }
 
         .card-tags {
@@ -228,7 +222,6 @@
             padding: 0.25rem 0.75rem;
             border-radius: 12px;
             font-size: 0.8rem;
-            font-weight: 500;
             border: 1px solid var(--border-color);
         }
 
@@ -246,11 +239,7 @@
         .tool-link:hover {
             background-color: var(--secondary-color);
         }
-
-        /* * =========================================
-         * Footer
-         * =========================================
-         */
+        
         .footer {
             text-align: center;
             padding: 2rem 1rem;
@@ -263,43 +252,32 @@
          * Animations
          * =========================================
          */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
         /* * =========================================
          * Responsive Design
          * =========================================
          */
+        @media (max-width: 992px) {
+            .dashboard-layout {
+                flex-direction: column-reverse; /* Put sidebar on top on mobile */
+            }
+            .sidebar {
+                position: static; /* Remove sticky position */
+                width: 100%;
+                margin-bottom: 2rem;
+            }
+            .tag-filters {
+                flex-direction: row; /* Tags back to horizontal row */
+                flex-wrap: wrap;
+            }
+        }
+        
         @media (max-width: 768px) {
-            .dashboard-header h1 {
-                font-size: 2rem;
-            }
-            .filters-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            #tools-grid {
-                grid-template-columns: 1fr; /* Single column on mobile */
-            }
+            .container { padding: 1.5rem; }
+            .dashboard-header h1 { font-size: 2rem; }
+            #tools-grid { grid-template-columns: 1fr; }
         }
 
     </style>
@@ -307,24 +285,29 @@
 <body>
 
     <div class="container">
-        <header class="dashboard-header">
-            <h1>AI Tools <span>Dashboard</span></h1>
-            <p>Discover, filter, and explore the best AI tools for your needs.</p>
-        </header>
+        <div class="dashboard-layout">
+            
+            <div class="main-content">
+                <header class="dashboard-header">
+                    <h1>AI Tools <span>Dashboard</span></h1>
+                    <p>Discover, filter, and explore the best AI tools for your needs.</p>
+                </header>
 
-        <section class="filters-container">
-            <div class="search-wrapper">
                 <input type="search" id="search-input" placeholder="Search by name or description...">
+
+                <main>
+                    <div id="tools-grid">
+                        </div>
+                </main>
             </div>
-            <div class="tag-filters" id="tag-filters-container">
-                </div>
-        </section>
-
-        <main>
-            <div id="tools-grid">
-                </div>
-        </main>
-
+            
+            <aside class="sidebar">
+                <h2>Filter by Tag</h2>
+                <div class="tag-filters" id="tag-filters-container">
+                    </div>
+            </aside>
+            
+        </div>
     </div>
     
     <footer class="footer">
@@ -335,207 +318,54 @@
         document.addEventListener('DOMContentLoaded', () => {
 
             // =========================================
-            //  DATA: The JSON for AI Tools
-            // =========================================
-            // In a real application, this might come from an API.
-            // For this self-contained example, it's defined here.
-            const toolsJSON =				[
-    {
-        "link": "https://chat.openai.com/",
-        "Name": "ChatGPT",
-        "Description": "A state-of-the-art conversational AI by OpenAI that can generate human-like text, answer questions, write code, and assist with a wide range of creative and analytical tasks.",
-        "tags": "chatbot,writing,code,assistant,productivity"
-    },
-    {
-        "link": "https://gemini.google.com/",
-        "Name": "Google Gemini",
-        "Description": "Google's powerful multimodal AI model, capable of understanding and reasoning across text, images, code, and video. Integrated into various Google products.",
-        "tags": "chatbot,multimodal,assistant,research,google"
-    },
-    {
-        "link": "https://claude.ai/",
-        "Name": "Claude 3",
-        "Description": "A family of large language models from Anthropic known for its strong performance in complex reasoning, thoughtful dialogue, and a focus on AI safety.",
-        "tags": "chatbot,writing,assistant,business,research"
-    },
-    {
-        "link": "https://www.midjourney.com/",
-        "Name": "Midjourney",
-        "Description": "A premier AI image generator that creates highly detailed and artistic images from natural language prompts, accessed primarily through Discord.",
-        "tags": "image generation,art,design,creativity"
-    },
-    {
-        "link": "https://openai.com/dall-e-3",
-        "Name": "DALL-E 3",
-        "Description": "OpenAI's advanced text-to-image model that generates high-quality, nuanced images with a deep understanding of prompts. Integrated into ChatGPT Plus.",
-        "tags": "image generation,art,design,openai"
-    },
-    {
-        "link": "https://stability.ai/",
-        "Name": "Stable Diffusion",
-        "Description": "A powerful, open-source text-to-image model by Stability AI, popular for its flexibility, customizability, and vibrant community of developers.",
-        "tags": "image generation,open source,art,development"
-    },
-    {
-        "link": "https://openai.com/sora",
-        "Name": "Sora",
-        "Description": "An AI model from OpenAI that can create realistic and imaginative video scenes from text instructions, simulating the physical world in motion.",
-        "tags": "video,content creation,animation,openai"
-    },
-    {
-        "link": "https://runwayml.com/",
-        "Name": "Runway",
-        "Description": "An all-in-one content creation suite with powerful AI magic tools for video editing, image generation, and other creative tasks.",
-        "tags": "video,editing,content creation,design"
-    },
-    {
-        "link": "https://pika.art/",
-        "Name": "Pika",
-        "Description": "A popular text-to-video and image-to-video platform that makes it easy to create expressive and high-quality short videos with AI.",
-        "tags": "video,content creation,animation,creativity"
-    },
-    {
-        "link": "https://elevenlabs.io/",
-        "Name": "ElevenLabs",
-        "Description": "A leading AI voice generation and text-to-speech platform that creates natural-sounding, human-like audio and allows for voice cloning.",
-        "tags": "audio,voice,text-to-speech,content creation"
-    },
-    {
-        "link": "https://suno.com/",
-        "Name": "Suno",
-        "Description": "An AI music generation tool that creates original songs, complete with lyrics, vocals, and instrumentation, from simple text prompts.",
-        "tags": "music,audio,creativity,song generation"
-    },
-    {
-        "link": "https://github.com/features/copilot",
-        "Name": "GitHub Copilot",
-        "Description": "An AI pair programmer that provides autocompletions, suggests entire functions, and helps you write code faster directly within your editor.",
-        "tags": "code,development,productivity,assistant,github"
-    },
-    {
-        "link": "https://www.perplexity.ai/",
-        "Name": "Perplexity AI",
-        "Description": "An AI-powered conversational search engine that provides direct, cited answers to questions by synthesizing information from multiple web sources.",
-        "tags": "research,search engine,productivity,assistant"
-    },
-    {
-        "link": "https://www.notion.so/product/ai",
-        "Name": "Notion AI",
-        "Description": "An AI assistant integrated into the Notion workspace that helps you write, brainstorm, summarize notes, and organize your thoughts more efficiently.",
-        "tags": "productivity,writing,assistant,organization"
-    },
-    {
-        "link": "https://www.canva.com/magic-studio/",
-        "Name": "Canva Magic Studio",
-        "Description": "A suite of AI-powered design tools within Canva that can generate images, write copy, create presentations, and automate design tasks.",
-        "tags": "design,marketing,image generation,content creation"
-    },
-    {
-        "link": "https://gamma.app/",
-        "Name": "Gamma",
-        "Description": "An AI-powered alternative to traditional slide decks. Generate beautiful and engaging presentations, documents, or webpages from a simple prompt.",
-        "tags": "presentation,design,productivity,business"
-    },
-    {
-        "link": "https://copilot.microsoft.com/",
-        "Name": "Microsoft Copilot",
-        "Description": "Microsoft's AI companion integrated across Windows, Bing, and Microsoft 365, designed to enhance productivity and information access.",
-        "tags": "assistant,productivity,chatbot,business,microsoft"
-    },
-    {
-        "link": "https://tome.app/",
-        "Name": "Tome",
-        "Description": "A modern AI-powered storytelling and presentation tool that helps you create compelling narratives with interactive, mobile-responsive layouts.",
-        "tags": "presentation,storytelling,design,business"
-    },
-	    {
-        "link": "https://ideamap.ai/",
-        "Name": "Ideamap AI",
-        "Description": "An AI-powered brainstorming and mind-mapping tool that helps you visualize, structure, and expand on your ideas collaboratively in real-time.",
-        "tags": "brainstorming,mind mapping,ideation,productivity"
-    },
-    {
-        "link": "https://miro.com/ai/",
-        "Name": "Miro AI",
-        "Description": "An AI assistant within the Miro collaborative whiteboard that can generate ideas, summarize sticky notes, create diagrams, and accelerate team brainstorming sessions.",
-        "tags": "brainstorming,collaboration,diagramming,productivity"
-    },
-    {
-        "link": "https://whimsical.com/ai",
-        "Name": "Whimsical AI",
-        "Description": "Generate mind maps, flowcharts, and other visual diagrams instantly from text prompts. A great tool for quick ideation and project planning within a collaborative space.",
-        "tags": "mind mapping,diagramming,ideation,project planning"
-    },
-    {
-        "link": "https://v0.dev/",
-        "Name": "v0.dev by Vercel",
-        "Description": "An AI-powered UI generation tool that creates React components and user interfaces from text prompts, using Shadcn UI and Tailwind CSS for modern designs.",
-        "tags": "app development,ui,frontend,code,vercel"
-    },
-    {
-        "link": "https://www.builder.io/",
-        "Name": "Builder.io Visual Copilot",
-        "Description": "A visual development platform with AI capabilities that can turn Figma designs into clean, high-quality code for various web frameworks, speeding up development.",
-        "tags": "app development,ui,frontend,low-code"
-    },
-    {
-        "link": "https://replit.com/ai",
-        "Name": "Replit AI",
-        "Description": "A comprehensive AI coding assistant within the Replit online IDE that helps write, debug, and explain code, supporting the entire development lifecycle.",
-        "tags": "app development,code,ide,assistant,fullstack"
-    },
-    {
-        "link": "https://app.yoodli.ai/",
-        "Name": "Yoodli",
-        "Description": "An AI speech coach that provides real-time, private feedback on your presentation and communication skills by analyzing filler words, pacing, and body language.",
-        "tags": "interview prep,communication,public speaking,video analysis"
-    },
-    {
-        "link": "https://www.poised.com/",
-        "Name": "Poised",
-        "Description": "An AI communication coach that works with virtual meeting platforms like Zoom and Google Meet to give real-time feedback on your confidence, clarity, and tone.",
-        "tags": "interview prep,communication,public speaking,assistant"
-    },
-    {
-        "link": "https://www.glowpe.com/",
-        "Name": "Glow AI",
-        "Description": "Practice interviews with an AI that asks relevant questions and provides instant, detailed feedback on your answers, vocal delivery, and overall performance.",
-        "tags": "interview prep,career,video analysis,assistant"
-    }
-];
-
-            // =========================================
             //  DOM Element References
             // =========================================
             const grid = document.getElementById('tools-grid');
             const searchInput = document.getElementById('search-input');
             const tagsContainer = document.getElementById('tag-filters-container');
 
-            let activeTag = 'all'; // Keep track of the currently selected tag filter
+            let allTools = []; // This will store the data from the JSON file
+            let activeTag = 'all';
 
             // =========================================
             //  Core Functions
             // =========================================
+            
+            /**
+             * Fetches tool data from the external JSON file.
+             */
+            async function loadTools() {
+                try {
+                    const response = await fetch('tools.json');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    allTools = await response.json();
+                    
+                    // Once data is loaded, initialize the dashboard
+                    generateFilterTags();
+                    renderTools(allTools);
+
+                } catch (error) {
+                    console.error("Could not fetch tools data:", error);
+                    grid.innerHTML = `<p style="color: red; text-align: center; grid-column: 1 / -1;">Error: Could not load AI tools data. Please check if 'tools.json' is available.</p>`;
+                }
+            }
 
             /**
-             * Renders the tool cards onto the page based on a provided array of tools.
+             * Renders the tool cards onto the page.
              * @param {Array} tools - The array of tool objects to display.
              */
             function renderTools(tools) {
-                grid.innerHTML = ''; // Clear the grid first
+                grid.innerHTML = '';
                 if (tools.length === 0) {
                     grid.innerHTML = `<p style="color: var(--text-secondary); grid-column: 1 / -1; text-align: center;">No tools found matching your criteria.</p>`;
                     return;
                 }
                 
                 tools.forEach((tool, index) => {
-                    // Convert tags string to an array for easier processing
                     const tagsArray = tool.tags.split(',').map(tag => tag.trim());
-                    
-                    // Create the HTML for the tags
-                    const tagsHTML = tagsArray.map(tag => `<span class="tag">${tag}</span>`).join('');
-
-                    // Create the card element
+                    const tagsHTML = tagsArray.map(tag => `<span>${tag}</span>`).join('');
                     const card = document.createElement('div');
                     card.className = 'tool-card';
                     card.innerHTML = `
@@ -547,54 +377,40 @@
                         </div>
                     `;
                     grid.appendChild(card);
-
-                    // Add a staggered animation effect for visible cards
-                    setTimeout(() => {
-                        card.classList.add('visible');
-                    }, index * 100);
+                    setTimeout(() => card.classList.add('visible'), index * 100);
                 });
             }
 
-
             /**
-             * Extracts all unique tags from the tools data and creates filter buttons.
+             * Extracts unique tags and creates filter buttons.
              */
             function generateFilterTags() {
-                // Use a Set to automatically handle uniqueness
                 const allTags = new Set();
-                toolsJSON.forEach(tool => {
+                allTools.forEach(tool => {
                     tool.tags.split(',').forEach(tag => allTags.add(tag.trim()));
                 });
 
-                // Create 'All' button
-                tagsContainer.innerHTML = `<button class="tag-filter active" data-tag="all">All</button>`;
+                tagsContainer.innerHTML = `<button class="tag-filter active" data-tag="all">All Tools</button>`;
                 
-                // Create buttons for each unique tag
                 allTags.forEach(tag => {
                     const button = document.createElement('button');
                     button.className = 'tag-filter';
-                    button.textContent = tag;
-                    button.dataset.tag = tag; // Use data attribute for easy selection
+                    button.textContent = tag.charAt(0).toUpperCase() + tag.slice(1); // Capitalize first letter
+                    button.dataset.tag = tag;
                     tagsContainer.appendChild(button);
                 });
             }
 
-
             /**
-             * Filters the tools based on the current search term and active tag.
-             * This function is the heart of the dashboard's interactivity.
+             * Filters tools based on search term and active tag, then re-renders the grid.
              */
             function filterAndRender() {
                 const searchTerm = searchInput.value.toLowerCase();
                 
-                const filteredTools = toolsJSON.filter(tool => {
-                    // Check if search term matches name or description
+                const filteredTools = allTools.filter(tool => {
                     const matchesSearch = tool.Name.toLowerCase().includes(searchTerm) ||
                                           tool.Description.toLowerCase().includes(searchTerm);
-
-                    // Check if tags match the active filter
                     const matchesTag = activeTag === 'all' || tool.tags.split(',').map(t => t.trim()).includes(activeTag);
-
                     return matchesSearch && matchesTag;
                 });
                 
@@ -604,22 +420,13 @@
             // =========================================
             //  Event Listeners
             // =========================================
-
-            // Listen for input in the search bar
             searchInput.addEventListener('input', filterAndRender);
 
-            // Listen for clicks on the tag filter buttons (using event delegation)
             tagsContainer.addEventListener('click', (e) => {
                 if (e.target.classList.contains('tag-filter')) {
-                    // Remove 'active' class from previously active button
                     tagsContainer.querySelector('.active').classList.remove('active');
-                    // Add 'active' class to the clicked button
                     e.target.classList.add('active');
-                    
-                    // Update the active tag state
                     activeTag = e.target.dataset.tag;
-                    
-                    // Re-run the filter and render process
                     filterAndRender();
                 }
             });
@@ -627,10 +434,7 @@
             // =========================================
             //  Initialisation
             // =========================================
-            
-            // Generate the filter buttons and render all tools on initial page load
-            generateFilterTags();
-            renderTools(toolsJSON);
+            loadTools(); // Start the process by loading the data
 
         });
     </script>
