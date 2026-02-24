@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C# Web API with GitHub CI/CD & Hostinger Deployment</title>
+    <style>
+        :root {
+            --color-bg-primary: #0f172a;
+            --color-bg-secondary: #1e293b;
+            --color-bg-tertiary: #334155;
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #cbd5e1;
+            --color-accent: #38bdf8;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-code-bg: #1e1e1e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 3px solid var(--color-accent);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-accent);
+        }
+
+        .header p {
+            color: var(--color-text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--color-bg-secondary);
+            padding-bottom: 0.5rem;
+        }
+
+        .nav-tab {
+            background: var(--color-bg-secondary);
+            color: var(--color-text-secondary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-primary);
+        }
+
+        .nav-tab.active {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-card {
+            background: var(--color-bg-secondary);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--color-accent);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .step-card h2 {
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-number {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .code-block {
+            background: var(--color-code-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            position: relative;
+            border: 1px solid var(--color-bg-tertiary);
+        }
+
+        .code-block pre {
+            margin: 0;
+            color: #d4d4d4;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-bg-tertiary);
+        }
+
+        .code-language {
+            color: var(--color-accent);
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .copy-btn {
+            background: var(--color-bg-tertiary);
+            color: var(--color-text-primary);
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+        }
+
+        .info-box {
+            background: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid var(--color-accent);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--color-warning);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .success-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--color-success);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .list-item {
+            margin: 0.5rem 0 0.5rem 1.5rem;
+            color: var(--color-text-secondary);
+        }
+
+        .sub-section {
+            margin: 1.5rem 0;
+        }
+
+        .sub-section h3 {
+            color: var(--color-text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .file-tree {
+            background: var(--color-code-bg);
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+
+        .file-tree-item {
+            padding: 0.2rem 0;
+            color: #d4d4d4;
+        }
+
+        .file-tree-indent {
+            display: inline-block;
+            width: 20px;
+        }
+
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--color-bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            position: relative;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: var(--color-bg-tertiary);
+            z-index: 0;
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .progress-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--color-bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.85rem;
+            z-index: 1;
+        }
+
+        .progress-circle.active {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            color: var(--color-text-secondary);
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: var(--color-bg-primary);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .btn-primary:hover {
+            background: #0284c7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(56, 189, 248, 0.3);
+        }
+
+        .command-output {
+            background: #000;
+            color: #0f0;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tab {
+                width: 100%;
+                text-align: center;
+            }
+
+            .progress-indicator {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .progress-step::after {
+                display: none;
+            }
+        }
+
+        .keyword {
+            color: #569cd6;
+        }
+
+        .string {
+            color: #ce9178;
+        }
+
+        .comment {
+            color: #6a9955;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 C# Web API with GitHub CI/CD &amp; Hostinger Deployment</h1>
+        <p>Complete step-by-step guide for building and deploying ASP.NET Core Web API</p>
+    </div>
+
+    <div class="container">
+        <div class="progress-indicator">
+            <div class="progress-step">
+                <div class="progress-circle active">1</div>
+                <div class="progress-label">Setup</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-circle">2</div>
+                <div class="progress-label">API</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-circle">3</div>
+                <div class="progress-label">GitHub</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-circle">4</div>
+                <div class="progress-label">CI/CD</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-circle">5</div>
+                <div class="progress-label">Deploy</div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('prerequisites')">Prerequisites</button>
+            <button class="nav-tab" onclick="showTab('project')">Create Project</button>
+            <button class="nav-tab" onclick="showTab('api')">Build API</button>
+            <button class="nav-tab" onclick="showTab('github')">GitHub Setup</button>
+            <button class="nav-tab" onclick="showTab('cicd')">CI/CD Pipeline</button>
+            <button class="nav-tab" onclick="showTab('hostinger')">Hostinger Deploy</button>
+            <button class="nav-tab" onclick="showTab('troubleshooting')">Troubleshooting</button>
+        </div>
+
+        <!-- Prerequisites Tab -->
+        <div id="prerequisites" class="tab-content active">
+            <div class="step-card">
+                <h2><span class="step-number">1</span> Prerequisites &amp; Tools</h2>
+                
+                <div class="sub-section">
+                    <h3>Required Software</h3>
+                    <ul>
+                        <li class="list-item"><strong>.NET SDK 8.0 or 9.0</strong> - Download from <a href="https://dotnet.microsoft.com/download" style="color: var(--color-accent);">dotnet.microsoft.com</a></li>
+                        <li class="list-item"><strong>Git</strong> - Download from <a href="https://git-scm.com/" style="color: var(--color-accent);">git-scm.com</a></li>
+                        <li class="list-item"><strong>Visual Studio 2022</strong> or <strong>VS Code</strong> with C# extension</li>
+                        <li class="list-item"><strong>GitHub Account</strong> - Sign up at <a href="https://github.com" style="color: var(--color-accent);">github.com</a></li>
+                        <li class="list-item"><strong>Hostinger VPS</strong> - Ubuntu 22.04 with ASP.NET template</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <strong>💡 Pro Tip:</strong> For Hostinger, you'll need a VPS plan (KVM 1 or higher) with Ubuntu 22.04 64bit with ASP.NET template. Shared hosting doesn't support ASP.NET Core.
+                </div>
+
+                <div class="sub-section">
+                    <h3>Verify Installation</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">PowerShell / Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Check .NET version
+dotnet --version
+
+# Check Git version
+git --version
+
+# List available .NET templates
+dotnet new list</pre>
+                    </div>
+                    
+                    <div class="command-output">
+$ dotnet --version
+9.0.0
+
+$ git --version
+git version 2.45.0</div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Recommended VS Code Extensions</h3>
+                    <ul>
+                        <li class="list-item">C# Dev Kit (Microsoft)</li>
+                        <li class="list-item">.NET Install Tool</li>
+                        <li class="list-item">REST Client (Test APIs)</li>
+                        <li class="list-item">GitHub Actions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Project Tab -->
+        <div id="project" class="tab-content">
+            <div class="step-card">
+                <h2><span class="step-number">2</span> Create ASP.NET Core Web API Project</h2>
+                
+                <div class="sub-section">
+                    <h3>Step 2.1: Create New Project</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Navigate to your projects folder
+cd C:\Projects
+
+# Create new Web API project
+dotnet new webapi -n MyWebApi
+
+# Navigate into project folder
+cd MyWebApi
+
+# Open in VS Code
+code .</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 2.2: Project Structure</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Your project should have this structure:</p>
+                    <div class="file-tree">
+<div class="file-tree-item">📁 MyWebApi/</div>
+<div class="file-tree-item"><span class="file-tree-indent"></span>📁 Controllers/</div>
+<div class="file-tree-item"><span class="file-tree-indent"></span><span class="file-tree-indent"></span>📄 WeatherForecastController.cs</div>
+<div class="file-tree-item"><span class="file-tree-indent"></span>📁 Properties/</div>
+<div class="file-tree-item"><span class="file-tree-indent"></span><span class="file-tree-indent"></span>📄 launchSettings.json</div>
+<div class="file-tree-item"><span class="file-tree-indent"></span>📄 appsettings.json</div>
+<div class="file-tree-item"><span class="file-tree-indent"></span>📄 appsettings.Development.json</div>
+<div class="file-tree-item"><span class="file-tree-indent"></span>📄 Program.cs</div>
+<div class="file-tree-item"><span class="file-tree-indent"></span>📄 MyWebApi.csproj</div>
+<div class="file-tree-item"><span class="file-tree-indent"></span>📄 WeatherForecast.cs</div>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 2.3: Run the Project Locally</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Restore dependencies
+dotnet restore
+
+# Build the project
+dotnet build
+
+# Run the application
+dotnet run</pre>
+                    </div>
+                    
+                    <div class="success-box">
+                        <strong>✅ Success!</strong> Your API should now be running at:
+                        <ul>
+                            <li class="list-item">HTTPS: <code>https://localhost:7xxx</code></li>
+                            <li class="list-item">HTTP: <code>http://localhost:5xxx</code></li>
+                            <li class="list-item">Swagger UI: <code>https://localhost:7xxx/swagger</code></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 2.4: Test the Default Endpoint</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Open your browser and navigate to the Swagger UI or test directly:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Terminal / PowerShell</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Test using curl
+curl https://localhost:7xxx/weatherforecast
+
+# Or using PowerShell
+Invoke-RestMethod -Uri "https://localhost:7xxx/weatherforecast"</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Build API Tab -->
+        <div id="api" class="tab-content">
+            <div class="step-card">
+                <h2><span class="step-number">3</span> Build Your Web API</h2>
+                
+                <div class="sub-section">
+                    <h3>Step 3.1: Create a Model</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Create a new file <code>Models/Product.cs</code>:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">C#</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><span class="keyword">namespace</span> MyWebApi.Models;
+
+<span class="keyword">public class</span> Product
+{
+    <span class="keyword">public int</span> Id { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+    <span class="keyword">public string</span> Name { <span class="keyword">get</span>; <span class="keyword">set</span>; } = <span class="string">string.Empty</span>;
+    <span class="keyword">public decimal</span> Price { <span class="keyword">get</span>; <span class="keyword">set</span>; }
+    <span class="keyword">public string</span> Description { <span class="keyword">get</span>; <span class="keyword">set</span>; } = <span class="string">string.Empty</span>;
+    <span class="keyword">public bool</span> IsAvailable { <span class="keyword">get</span>; <span class="keyword">set</span>; } = <span class="keyword">true</span>;
+}</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 3.2: Create a Controller</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Create <code>Controllers/ProductsController.cs</code>:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">C#</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><span class="keyword">using</span> Microsoft.AspNetCore.Mvc;
+<span class="keyword">using</span> MyWebApi.Models;
+
+<span class="keyword">namespace</span> MyWebApi.Controllers;
+
+[ApiController]
+[Route(<span class="string">"api/[controller]"</span>)]
+<span class="keyword">public class</span> ProductsController : ControllerBase
+{
+    <span class="keyword">private static readonly</span> List&lt;Product&gt; _products = <span class="keyword">new</span>()
+    {
+        <span class="keyword">new</span> Product { Id = 1, Name = <span class="string">"Laptop"</span>, Price = 999.99m, Description = <span class="string">"High-performance laptop"</span> },
+        <span class="keyword">new</span> Product { Id = 2, Name = <span class="string">"Mouse"</span>, Price = 29.99m, Description = <span class="string">"Wireless mouse"</span> }
+    };
+
+    <span class="comment">// GET: api/products</span>
+    [HttpGet]
+    <span class="keyword">public</span> ActionResult&lt;IEnumerable&lt;Product&gt;&gt; GetAll()
+    {
+        <span class="keyword">return</span> Ok(_products);
+    }
+
+    <span class="comment">// GET: api/products/1</span>
+    [HttpGet(<span class="string">"{id}"</span>)]
+    <span class="keyword">public</span> ActionResult&lt;Product&gt; GetById(<span class="keyword">int</span> id)
+    {
+        <span class="keyword">var</span> product = _products.FirstOrDefault(p =&gt; p.Id == id);
+        <span class="keyword">if</span> (product == <span class="keyword">null</span>)
+            <span class="keyword">return</span> NotFound();
+        
+        <span class="keyword">return</span> Ok(product);
+    }
+
+    <span class="comment">// POST: api/products</span>
+    [HttpPost]
+    <span class="keyword">public</span> ActionResult&lt;Product&gt; Create(Product product)
+    {
+        product.Id = _products.Max(p =&gt; p.Id) + 1;
+        _products.Add(product);
+        <span class="keyword">return</span> CreatedAtAction(<span class="keyword">nameof</span>(GetById), <span class="keyword">new</span> { id = product.Id }, product);
+    }
+
+    <span class="comment">// PUT: api/products/1</span>
+    [HttpPut(<span class="string">"{id}"</span>)]
+    <span class="keyword">public</span> IActionResult Update(<span class="keyword">int</span> id, Product product)
+    {
+        <span class="keyword">var</span> existing = _products.FirstOrDefault(p =&gt; p.Id == id);
+        <span class="keyword">if</span> (existing == <span class="keyword">null</span>)
+            <span class="keyword">return</span> NotFound();
+        
+        existing.Name = product.Name;
+        existing.Price = product.Price;
+        existing.Description = product.Description;
+        existing.IsAvailable = product.IsAvailable;
+        
+        <span class="keyword">return</span> NoContent();
+    }
+
+    <span class="comment">// DELETE: api/products/1</span>
+    [HttpDelete(<span class="string">"{id}"</span>)]
+    <span class="keyword">public</span> IActionResult Delete(<span class="keyword">int</span> id)
+    {
+        <span class="keyword">var</span> product = _products.FirstOrDefault(p =&gt; p.Id == id);
+        <span class="keyword">if</span> (product == <span class="keyword">null</span>)
+            <span class="keyword">return</span> NotFound();
+        
+        _products.Remove(product);
+        <span class="keyword">return</span> NoContent();
+    }
+}</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 3.3: Configure CORS (Important for Production)</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Update <code>Program.cs</code>:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">C#</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre><span class="keyword">var</span> builder = WebApplication.CreateBuilder(args);
+
+<span class="comment">// Add services to the container</span>
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+<span class="comment">// Configure CORS</span>
+builder.Services.AddCors(options =&gt;
+{
+    options.AddPolicy(<span class="string">"AllowAll"</span>,
+        policy =&gt;
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
+<span class="keyword">var</span> app = builder.Build();
+
+<span class="comment">// Configure the HTTP request pipeline</span>
+<span class="keyword">if</span> (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseCors(<span class="string">"AllowAll"</span>);
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 3.4: Test Your API Endpoints</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Run the application
+dotnet run
+
+# Test GET all products
+curl https://localhost:7xxx/api/products
+
+# Test POST new product
+curl -X POST https://localhost:7xxx/api/products \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Keyboard","price":79.99,"description":"Mechanical keyboard"}'</pre>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <strong>✅ API Complete!</strong> You now have a fully functional REST API with CRUD operations.
+                </div>
+            </div>
+        </div>
+
+        <!-- GitHub Setup Tab -->
+        <div id="github" class="tab-content">
+            <div class="step-card">
+                <h2><span class="step-number">4</span> GitHub Repository Setup</h2>
+                
+                <div class="sub-section">
+                    <h3>Step 4.1: Initialize Git Repository</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Initialize Git in your project folder
+git init
+
+# Add .gitignore for .NET
+dotnet new gitignore
+
+# Stage all files
+git add .
+
+# Commit
+git commit -m "Initial commit: ASP.NET Core Web API"</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 4.2: Create GitHub Repository</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Go to <a href="https://github.com/new" style="color: var(--color-accent);">GitHub</a> and create a new repository:</p>
+                    <ul>
+                        <li class="list-item">Repository name: <strong>MyWebApi</strong></li>
+                        <li class="list-item">Visibility: Choose Public or Private</li>
+                        <li class="list-item"><strong>Don't initialize with README, .gitignore, or license</strong> (we already have these)</li>
+                        <li class="list-item">Click "Create repository"</li>
+                    </ul>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 4.3: Push to GitHub</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Add remote repository (replace YOUR_USERNAME)
+git remote add origin https://github.com/YOUR_USERNAME/MyWebApi.git
+
+# Rename branch to main (if needed)
+git branch -M main
+
+# Push to GitHub
+git push -u origin main</pre>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>💡 GitHub Authentication:</strong> If prompted for credentials, use a Personal Access Token instead of password. Generate one at: Settings → Developer settings → Personal access tokens → Tokens (classic)
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 4.4: Verify Upload</h3>
+                    <p style="color: var(--color-text-secondary);">Go to your GitHub repository URL and verify all files are uploaded correctly.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CI/CD Pipeline Tab -->
+        <div id="cicd" class="tab-content">
+            <div class="step-card">
+                <h2><span class="step-number">5</span> GitHub Actions CI/CD Pipeline</h2>
+                
+                <div class="sub-section">
+                    <h3>Step 5.1: Create Workflow Directory</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Create .github/workflows directory
+mkdir -p .github/workflows
+
+# Create workflow file
+touch .github/workflows/deploy.yml</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 5.2: Create CI/CD Workflow</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Create <code>.github/workflows/deploy.yml</code>:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">YAML</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre>name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    
+    - name: Publish
+      run: dotnet publish -c Release -o ./publish
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: webapp
+        path: ./publish
+  
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: webapp
+        path: ./publish
+    
+    - name: Deploy to Hostinger VPS
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        source: "./publish/*"
+        target: "/var/www/mywebapi"
+    
+    - name: Restart Application
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: |
+          sudo systemctl restart mywebapi.service</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 5.3: Understanding the Workflow</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">This workflow does the following:</p>
+                    <ul>
+                        <li class="list-item"><strong>Triggers:</strong> On push or pull request to main branch</li>
+                        <li class="list-item"><strong>Build Job:</strong> Restores, builds, tests, and publishes your app</li>
+                        <li class="list-item"><strong>Deploy Job:</strong> Uploads files to VPS and restarts the service</li>
+                        <li class="list-item"><strong>Security:</strong> Uses GitHub Secrets for sensitive data</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <strong>⚠️ Important:</strong> Don't commit the workflow yet! We need to set up GitHub Secrets first (covered in the Hostinger Deploy tab).
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 5.4: Alternative - Simple Build Workflow</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">If you want to start with just CI (no deployment), use this simpler workflow:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">YAML</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre>name: .NET CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    
+    - name: Test
+      run: dotnet test --no-build --verbosity normal</pre>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <strong>✅ CI/CD Pipeline Ready!</strong> Once you set up GitHub Secrets and push this workflow, it will automatically build and deploy your app on every commit.
+                </div>
+            </div>
+        </div>
+
+        <!-- Hostinger Deploy Tab -->
+        <div id="hostinger" class="tab-content">
+            <div class="step-card">
+                <h2><span class="step-number">6</span> Deploy to Hostinger VPS</h2>
+                
+                <div class="sub-section">
+                    <h3>Step 6.1: Get Hostinger VPS</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Purchase a Hostinger VPS plan:</p>
+                    <ul>
+                        <li class="list-item"><strong>Recommended:</strong> KVM 1 (1 vCPU, 4GB RAM) - ₹429/month</li>
+                        <li class="list-item"><strong>OS Template:</strong> Ubuntu 22.04 64bit with ASP.NET</li>
+                        <li class="list-item">Visit: <a href="https://www.hostinger.in/vps-hosting" style="color: var(--color-accent);">Hostinger VPS Hosting</a></li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <strong>💡 Why VPS?</strong> ASP.NET Core requires a VPS with Linux. Hostinger's shared hosting doesn't support .NET applications.
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 6.2: Connect to VPS via SSH</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">After provisioning your VPS, you'll receive:</p>
+                    <ul>
+                        <li class="list-item">IP Address (e.g., 123.45.67.89)</li>
+                        <li class="list-item">Username (usually 'root')</li>
+                        <li class="list-item">Password or SSH key</li>
+                    </ul>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Connect to VPS
+ssh root@YOUR_VPS_IP
+
+# Verify .NET is installed
+dotnet --version</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 6.3: Prepare VPS for Deployment</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Update system
+sudo apt update &amp;&amp; sudo apt upgrade -y
+
+# Create application directory
+sudo mkdir -p /var/www/mywebapi
+sudo chown -R $USER:$USER /var/www/mywebapi
+
+# Install NGINX (reverse proxy)
+sudo apt install nginx -y
+
+# Start and enable NGINX
+sudo systemctl start nginx
+sudo systemctl enable nginx</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 6.4: Configure NGINX Reverse Proxy</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Create NGINX configuration:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Create NGINX site configuration
+sudo nano /etc/nginx/sites-available/mywebapi</pre>
+                    </div>
+                    
+                    <p style="color: var(--color-text-secondary); margin: 1rem 0;">Add this configuration:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">NGINX</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre>server {
+    listen 80;
+    listen [::]:80;
+    server_name YOUR_DOMAIN_OR_IP;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection keep-alive;
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Enable the site
+sudo ln -s /etc/nginx/sites-available/mywebapi /etc/nginx/sites-enabled/
+
+# Test NGINX configuration
+sudo nginx -t
+
+# Reload NGINX
+sudo systemctl reload nginx</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 6.5: Create Systemd Service</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">This keeps your app running in the background:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Create service file
+sudo nano /etc/systemd/system/mywebapi.service</pre>
+                    </div>
+                    
+                    <p style="color: var(--color-text-secondary); margin: 1rem 0;">Add this configuration:</p>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">INI</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre>[Unit]
+Description=My Web API Application
+After=network.target
+
+[Service]
+Type=notify
+WorkingDirectory=/var/www/mywebapi
+ExecStart=/usr/bin/dotnet /var/www/mywebapi/MyWebApi.dll
+Restart=always
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=mywebapi
+User=root
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=ASPNETCORE_URLS=http://localhost:5000
+
+[Install]
+WantedBy=multi-user.target</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Reload systemd
+sudo systemctl daemon-reload
+
+# Enable service to start on boot
+sudo systemctl enable mywebapi.service</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 6.6: Configure GitHub Secrets</h3>
+                    <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Go to your GitHub repository → Settings → Secrets and variables → Actions → New repository secret:</p>
+                    
+                    <div style="background: var(--color-bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <p><strong>Secret 1: VPS_HOST</strong></p>
+                        <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">Value: Your VPS IP address (e.g., 123.45.67.89)</p>
+                    </div>
+                    
+                    <div style="background: var(--color-bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <p><strong>Secret 2: VPS_USERNAME</strong></p>
+                        <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">Value: root (or your SSH username)</p>
+                    </div>
+                    
+                    <div style="background: var(--color-bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <p><strong>Secret 3: VPS_SSH_KEY</strong></p>
+                        <p style="color: var(--color-text-secondary); margin-top: 0.5rem;">Value: Your SSH private key</p>
+                    </div>
+                    
+                    <div class="info-box">
+                        <strong>💡 Getting SSH Key:</strong>
+                        <div class="code-block" style="margin-top: 0.5rem;">
+                            <pre># On your local machine, generate SSH key
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/hostinger_key
+
+# Copy public key to VPS
+ssh-copy-id -i ~/.ssh/hostinger_key.pub root@YOUR_VPS_IP
+
+# Display private key (copy this to GitHub secret)
+cat ~/.ssh/hostinger_key</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 6.7: Deploy and Test</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Commit and push workflow file
+git add .github/workflows/deploy.yml
+git commit -m "Add CI/CD pipeline"
+git push origin main</pre>
+                    </div>
+                    
+                    <p style="color: var(--color-text-secondary); margin: 1rem 0;">Go to your GitHub repository → Actions tab to watch the deployment.</p>
+                    
+                    <div class="success-box">
+                        <strong>✅ Deployment Complete!</strong> Your API should now be accessible at:
+                        <ul>
+                            <li class="list-item"><code>http://YOUR_VPS_IP/api/products</code></li>
+                            <li class="list-item"><code>http://YOUR_DOMAIN/api/products</code> (if domain configured)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 6.8: Configure SSL (Optional but Recommended)</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Install Certbot
+sudo apt install certbot python3-certbot-nginx -y
+
+# Obtain SSL certificate (replace YOUR_DOMAIN)
+sudo certbot --nginx -d YOUR_DOMAIN
+
+# Auto-renewal is configured automatically
+sudo certbot renew --dry-run</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Step 6.9: Useful VPS Commands</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Check application status
+sudo systemctl status mywebapi.service
+
+# View application logs
+sudo journalctl -u mywebapi.service -f
+
+# Restart application
+sudo systemctl restart mywebapi.service
+
+# Stop application
+sudo systemctl stop mywebapi.service
+
+# Start application
+sudo systemctl start mywebapi.service
+
+# Check NGINX status
+sudo systemctl status nginx
+
+# Test NGINX configuration
+sudo nginx -t</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Troubleshooting Tab -->
+        <div id="troubleshooting" class="tab-content">
+            <div class="step-card">
+                <h2><span class="step-number">7</span> Troubleshooting &amp; Common Issues</h2>
+                
+                <div class="sub-section">
+                    <h3>Issue 1: GitHub Actions Failing</h3>
+                    <div class="warning-box">
+                        <strong>Problem:</strong> Build or deploy job fails
+                    </div>
+                    <p style="color: var(--color-text-secondary); margin: 1rem 0;"><strong>Solutions:</strong></p>
+                    <ul>
+                        <li class="list-item">Check Actions tab for detailed error logs</li>
+                        <li class="list-item">Verify all GitHub Secrets are correctly set</li>
+                        <li class="list-item">Ensure .NET version in workflow matches your project</li>
+                        <li class="list-item">Verify SSH key has no passphrase</li>
+                    </ul>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Issue 2: Application Not Starting on VPS</h3>
+                    <div class="warning-box">
+                        <strong>Problem:</strong> Service fails to start after deployment
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Check detailed error logs
+sudo journalctl -u mywebapi.service -n 50 --no-pager
+
+# Verify file permissions
+ls -la /var/www/mywebapi
+
+# Test manual run
+cd /var/www/mywebapi
+dotnet MyWebApi.dll</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Issue 3: 502 Bad Gateway Error</h3>
+                    <div class="warning-box">
+                        <strong>Problem:</strong> NGINX shows 502 error
+                    </div>
+                    <p style="color: var(--color-text-secondary); margin: 1rem 0;"><strong>Causes &amp; Solutions:</strong></p>
+                    <ul>
+                        <li class="list-item"><strong>Application not running:</strong> Check service status with <code>sudo systemctl status mywebapi</code></li>
+                        <li class="list-item"><strong>Wrong port:</strong> Verify app listens on port 5000 (check ASPNETCORE_URLS)</li>
+                        <li class="list-item"><strong>Firewall:</strong> Ensure port 5000 is open for localhost</li>
+                    </ul>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Issue 4: CORS Errors</h3>
+                    <div class="warning-box">
+                        <strong>Problem:</strong> Browser blocks API requests
+                    </div>
+                    <p style="color: var(--color-text-secondary); margin: 1rem 0;">Verify CORS is configured in Program.cs (see Step 3.3 in Build API tab)</p>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Issue 5: Port Already in Use</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Find process using port 5000
+sudo lsof -i :5000
+
+# Kill the process (replace PID)
+sudo kill -9 PID
+
+# Or change port in systemd service file
+sudo nano /etc/systemd/system/mywebapi.service
+# Change ASPNETCORE_URLS to use different port</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Issue 6: SSL Certificate Issues</h3>
+                    <div class="warning-box">
+                        <strong>Problem:</strong> HTTPS not working or certificate errors
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Test certificate renewal
+sudo certbot renew --dry-run
+
+# Check certificate status
+sudo certbot certificates
+
+# Force certificate renewal
+sudo certbot renew --force-renewal</pre>
+                    </div>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Issue 7: Database Connection Failures</h3>
+                    <p style="color: var(--color-text-secondary); margin: 1rem 0;"><strong>Solutions:</strong></p>
+                    <ul>
+                        <li class="list-item">Store connection strings in environment variables</li>
+                        <li class="list-item">Never commit connection strings to GitHub</li>
+                        <li class="list-item">Use appsettings.Production.json for production settings</li>
+                        <li class="list-item">Add connection string to systemd service Environment variables</li>
+                    </ul>
+                </div>
+
+                <div class="sub-section">
+                    <h3>Useful Debugging Commands</h3>
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-language">Bash</span>
+                            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                        </div>
+                        <pre># Real-time logs
+sudo journalctl -u mywebapi.service -f
+
+# Check all systemd services
+sudo systemctl list-units --type=service
+
+# Check NGINX error logs
+sudo tail -f /var/log/nginx/error.log
+
+# Check NGINX access logs
+sudo tail -f /var/log/nginx/access.log
+
+# Test API endpoint from VPS
+curl http://localhost:5000/api/products
+
+# Check system resources
+htop
+# or
+top
+
+# Check disk space
+df -h
+
+# Check memory usage
+free -h</pre>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <strong>💡 Pro Tips:</strong>
+                    <ul>
+                        <li class="list-item">Always check logs first: <code>sudo journalctl -u mywebapi.service -n 50</code></li>
+                        <li class="list-item">Test locally before deploying: <code>dotnet run</code></li>
+                        <li class="list-item">Use environment-specific appsettings files</li>
+                        <li class="list-item">Keep your VPS updated: <code>sudo apt update &amp;&amp; sudo apt upgrade</code></li>
+                        <li class="list-item">Monitor disk space and memory regularly</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <h2>🎉 Congratulations!</h2>
+                <p style="color: var(--color-text-secondary); margin: 1rem 0;">You've successfully:</p>
+                <ul>
+                    <li class="list-item">✅ Created a C# ASP.NET Core Web API</li>
+                    <li class="list-item">✅ Set up GitHub repository with version control</li>
+                    <li class="list-item">✅ Configured GitHub Actions CI/CD pipeline</li>
+                    <li class="list-item">✅ Deployed to Hostinger VPS with NGINX reverse proxy</li>
+                    <li class="list-item">✅ Configured systemd service for automatic restarts</li>
+                </ul>
+                
+                <div class="info-box">
+                    <strong>Next Steps:</strong>
+                    <ul>
+                        <li class="list-item">Add a database (SQL Server, PostgreSQL, or MySQL)</li>
+                        <li class="list-item">Implement authentication and authorization (JWT)</li>
+                        <li class="list-item">Add logging and monitoring</li>
+                        <li class="list-item">Configure custom domain and SSL</li>
+                        <li class="list-item">Set up backup strategy</li>
+                        <li class="list-item">Implement health checks and monitoring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all nav tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked nav tab
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('pre').textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                button.style.background = 'var(--color-success)';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                button.textContent = '✗ Failed';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+
+        // Update progress indicator based on current tab
+        document.addEventListener('DOMContentLoaded', () => {
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach((tab, index) => {
+                tab.addEventListener('click', () => {
+                    updateProgress(index);
+                });
+            });
+        });
+
+        function updateProgress(tabIndex) {
+            const circles = document.querySelectorAll('.progress-circle');
+            circles.forEach((circle, index) => {
+                if (index <= Math.floor(tabIndex * 5 / 7)) {
+                    circle.classList.add('active');
+                } else {
+                    circle.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+
