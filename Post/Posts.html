@@ -1,1 +1,315 @@
+<!-- post/Posts.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+    <style>
+        :root{
+            color-scheme: dark;
+            --bg: #0b1220;
+            --panel: rgba(255,255,255,.06);
+            --panel2: rgba(255,255,255,.085);
+            --text: rgba(255,255,255,.92);
+            --muted: rgba(255,255,255,.68);
+            --border: rgba(255,255,255,.14);
+            --accent: #7c3aed;
+            --accent2: #22d3ee;
+            --shadow: 0 18px 60px rgba(0,0,0,.55);
+            --radius: 16px;
+        }
+        *{ box-sizing: border-box; }
+        html,body{ height:100%; }
+        body{
+            margin:0;
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            color: var(--text);
+            background:
+                radial-gradient(900px 520px at 15% 10%, rgba(124,58,237,.33), transparent 55%),
+                radial-gradient(850px 520px at 85% 0%, rgba(34,211,238,.20), transparent 50%),
+                radial-gradient(900px 620px at 65% 100%, rgba(124,58,237,.16), transparent 55%),
+                linear-gradient(180deg, #060a12 0%, var(--bg) 55%, #060a12 100%);
+        }
+        a{ color: inherit; text-decoration: none; }
+        .container{
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 18px 64px;
+        }
+        header{
+            display:flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        .titleWrap h1{
+            margin:0;
+            font-size: clamp(22px, 3vw, 34px);
+            letter-spacing: .2px;
+        }
+        .titleWrap p{
+            margin: 8px 0 0;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+        .toolbar{
+            display:flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .input{
+            width: min(360px, 74vw);
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,.04);
+            color: var(--text);
+            outline: none;
+        }
+        .input:focus{
+            border-color: rgba(124,58,237,.65);
+            box-shadow: 0 0 0 4px rgba(124,58,237,.18);
+        }
+        .grid{
+            display:grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 14px;
+            margin-top: 18px;
+        }
+        .card{
+            grid-column: span 6;
+            background: linear-gradient(180deg, var(--panel) 0%, rgba(255,255,255,.04) 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 16px 14px;
+            box-shadow: var(--shadow);
+            transition: transform .18s ease, border-color .18s ease, background .18s ease;
+        }
+        .card:hover{
+            transform: translateY(-2px);
+            border-color: rgba(124,58,237,.45);
+            background: linear-gradient(180deg, var(--panel2) 0%, rgba(255,255,255,.05) 100%);
+        }
+        .cardTop{
+            display:flex;
+            align-items:flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .card h2{
+            margin:0;
+            font-size: 18px;
+            line-height: 1.25;
+        }
+        .meta{
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            display:flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .badge{
+            display:inline-flex;
+            align-items:center;
+            gap: 6px;
+            padding: 5px 9px;
+            font-size: 12px;
+            color: rgba(255,255,255,.84);
+            background: rgba(124,58,237,.16);
+            border: 1px solid rgba(124,58,237,.34);
+            border-radius: 999px;
+        }
+        .badge.alt{
+            background: rgba(34,211,238,.12);
+            border-color: rgba(34,211,238,.30);
+        }
+        .desc{
+            margin: 12px 0 0;
+            color: rgba(255,255,255,.82);
+            line-height: 1.5;
+        }
+        .actions{
+            margin-top: 14px;
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .cta{
+            display:inline-flex;
+            align-items:center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(124,58,237,.50);
+            background: linear-gradient(180deg, rgba(124,58,237,.22), rgba(124,58,237,.08));
+            transition: transform .18s ease, filter .18s ease;
+            font-weight: 600;
+        }
+        .cta:hover{
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+        }
+        .empty{
+            grid-column: 1 / -1;
+            padding: 18px;
+            border-radius: var(--radius);
+            border: 1px dashed rgba(255,255,255,.18);
+            background: rgba(255,255,255,.03);
+            color: var(--muted);
+        }
+        footer{
+            margin-top: 20px;
+            color: rgba(255,255,255,.55);
+            font-size: 12px;
+        }
+        @media (max-width: 880px){
+            header{ align-items: flex-start; flex-direction: column; }
+            .toolbar{ justify-content: flex-start; width: 100%; }
+            .card{ grid-column: span 12; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="titleWrap">
+                <h1>Posts</h1>
+                <p>Dark-themed post list rendered from a JS array. Add new posts by adding one object in the array—no HTML edits needed.</p>
+            </div>
 
+            <div class="toolbar">
+                <input id="search" class="input" type="search" placeholder="Search title, tags, summary..." autocomplete="off" />
+            </div>
+        </header>
+
+        <main>
+            <div id="posts" class="grid" aria-live="polite"></div>
+            <footer id="count"></footer>
+        </main>
+    </div>
+
+    <script>
+        // Add new posts by adding an object here.
+        // link is relative to THIS file: post/Posts.html → so "taskmanageapi.html" works.
+        const posts = [
+            {
+                title: "Task Manage API",
+                date: "2026-02-24",
+                tags: ["C#", "Web API"],
+                summary: "Notes and guide for a Task Management Web API.",
+                link: "taskmanageapi.html"
+            },
+            {
+                title: "C# Web API Guide",
+                date: "2026-02-24",
+                tags: ["C#", "Web API", "Guide"],
+                summary: "Reference notes for building Web APIs in C#.",
+                link: "csharp_webapi_guide.html"
+            }
+        ];
+
+        const byId = (id) => document.getElementById(id);
+
+        function normalize(value) {
+            return String(value ?? "").toLowerCase();
+        }
+
+        function formatDate(isoDate) {
+            // Keep it simple and predictable; you can swap to locale formatting later.
+            return isoDate || "";
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+
+        function render(list) {
+            const root = byId("posts");
+            const count = byId("count");
+
+            if (!list.length) {
+                root.innerHTML = `<div class="empty">No posts match your search.</div>`;
+                count.textContent = "";
+                return;
+            }
+
+            root.innerHTML = list.map((p) => {
+                const safeTitle = escapeHtml(p.title);
+                const safeSummary = escapeHtml(p.summary || "");
+                const safeDate = escapeHtml(formatDate(p.date || ""));
+                const safeLink = escapeHtml(p.link || "#");
+                const tags = Array.isArray(p.tags) ? p.tags : [];
+
+                const tagsHtml = tags.slice(0, 4).map((t, idx) => (
+                    `<span class="badge ${idx % 2 ? "alt" : ""}">${escapeHtml(t)}</span>`
+                )).join("");
+
+                return `
+                    <article class="card">
+                        <div class="cardTop">
+                            <h2><a href="${safeLink}">${safeTitle}</a></h2>
+                            ${safeDate ? `<span class="badge" title="Published date">${safeDate}</span>` : ""}
+                        </div>
+                        <div class="meta">${tagsHtml}</div>
+                        ${safeSummary ? `<p class="desc">${safeSummary}</p>` : ""}
+                        <div class="actions">
+                            <a class="cta" href="${safeLink}">
+                                Read
+                                <span aria-hidden="true">→</span>
+                            </a>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+
+            count.textContent = `${list.length} post${list.length === 1 ? "" : "s"}`;
+        }
+
+        function sortNewestFirst(a, b) {
+            // ISO yyyy-mm-dd sorts lexicographically the same as by date.
+            const ad = String(a.date || "");
+            const bd = String(b.date || "");
+            return bd.localeCompare(ad);
+        }
+
+        function init() {
+            const search = byId("search");
+            const sorted = [...posts].sort(sortNewestFirst);
+
+            const apply = () => {
+                const q = normalize(search.value).trim();
+                if (!q) {
+                    render(sorted);
+                    return;
+                }
+
+                const filtered = sorted.filter((p) => {
+                    const haystack = [
+                        p.title,
+                        p.summary,
+                        Array.isArray(p.tags) ? p.tags.join(" ") : ""
+                    ].map(normalize).join(" ");
+                    return haystack.includes(q);
+                });
+
+                render(filtered);
+            };
+
+            search.addEventListener("input", apply);
+            render(sorted);
+        }
+
+        document.addEventListener("DOMContentLoaded", init);
+    </script>
+</body>
+</html>
